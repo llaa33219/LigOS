@@ -19,6 +19,29 @@
             <!-- Files and folders will be listed here -->
         </div>
     </div>
+
+    <div id="context-menu" class="hidden">
+        <ul>
+            <li id="rename-option">Rename</li>
+            <li id="delete-option">Delete</li>
+        </ul>
+    </div>
+
+    <div id="file-viewer-modal" class="hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span id="file-viewer-title"></span>
+                <button id="file-viewer-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="file-viewer-textarea"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="file-viewer-save">Save</button>
+            </div>
+        </div>
+    </div>
+
     <script src="file-manager.js"></script>
 </body>
 </html> 

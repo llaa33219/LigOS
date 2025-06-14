@@ -232,9 +232,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (type === 'os:setConfig') {
             if (payload.key === 'backgroundColor') {
                 document.body.style.backgroundColor = payload.value;
-                // You might want to save this to localStorage as well
-                // localStorage.setItem('ligos_bgColor', payload.value);
+                localStorage.setItem('ligos_bgColor', payload.value);
             }
+        }
+        if (type === 'os:getConfig') {
+            let data = null;
+            if (payload.key === 'backgroundColor') {
+                data = localStorage.getItem('ligos_bgColor') || document.body.style.backgroundColor;
+            }
+            event.source.postMessage({ source: 'ligos-os', success: true, reqId, data }, event.origin);
+            return; // Return early as we handled the response
         }
         if (type === 'os:reset') {
             localStorage.clear();
@@ -245,6 +252,43 @@ document.addEventListener('DOMContentLoaded', () => {
         if (type === 'app:refresh') {
             renderPrograms();
             renderPinnedApps();
+        }
+
+        if (type.startsWith('app:')) {
+            const command = type.split(':')[1];
+            let result = { success: true };
+
+            switch(command) {
+                case 'getPrograms':
+                    result.data = packageManager.getPrograms();
+                    break;
+                case 'getPinned':
+                    result.data = packageManager.getPinnedApps();
+                    break;
+                case 'pin':
+                    result = packageManager.pinApp(payload.name);
+                    break;
+                case 'unpin':
+                    result = packageManager.unpinApp(payload.name);
+                    break;
+                case 'uninstall':
+                    result = packageManager.uninstallApp(payload.name);
+                    if (result.success) {
+                        // Notify all windows to refresh their app lists
+                        window.parent.postMessage({ source: 'ligos-app', type: 'app:refresh' }, '*');
+                    }
+                    break;
+                default:
+                    result = { success: false, error: 'Unknown app command' };
+            }
+            if (reqId && event.source) {
+                event.source.postMessage({ source: 'ligos-os', reqId, ...result }, event.origin);
+            }
+             // Also refresh the main UI
+            if (result.success && ['pin', 'unpin', 'uninstall'].includes(command)) {
+                renderPrograms();
+                renderPinnedApps();
+            }
         }
 
         // --- File System API ---
@@ -267,6 +311,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 case 'delete':
                     result = ligfs.delete(payload.path);
+                    break;
+                case 'rename':
+                    result = ligfs.rename(payload.oldPath, payload.newPath);
                     break;
                 default:
                     result = { success: false, error: 'Unknown fs command' };

@@ -78,14 +78,44 @@ class LigFS {
     }
 
     delete(path) {
-        const parent = this._getParent(path);
-        const name = path.split('/').pop();
-        if (parent && parent.children && parent.children[name]) {
-            delete parent.children[name];
-            this.save();
-            return { success: true };
+        const { parent, nodeName } = this._findNode(path, true);
+        if (!parent || !(nodeName in parent.children)) {
+            return { success: false, error: 'File or directory not found' };
         }
-        return { success: false, error: 'File or directory not found' };
+        delete parent.children[nodeName];
+        this.save();
+        return { success: true };
+    }
+
+    rename(oldPath, newPath) {
+        if (oldPath === '/' || newPath === '/') {
+            return { success: false, error: 'Cannot rename root' };
+        }
+
+        const { parent: oldParent, node: oldNode, nodeName: oldName } = this._findNode(oldPath, false);
+        if (!oldNode) {
+            return { success: false, error: 'Source file or directory not found' };
+        }
+
+        const newPathParts = newPath.split('/').filter(p => p);
+        const newName = newPathParts.pop();
+        const newParentPath = '/' + newPathParts.join('/');
+        
+        const { node: newParent } = this._findNode(newParentPath, false);
+        if (!newParent || newParent.type !== 'directory') {
+            return { success: false, error: 'Target directory not found' };
+        }
+
+        if (newName in newParent.children) {
+            return { success: false, error: 'A file or directory with that name already exists' };
+        }
+        
+        // Copy node to new parent and delete old one
+        newParent.children[newName] = oldNode;
+        delete oldParent.children[oldName];
+
+        this.save();
+        return { success: true };
     }
 }
 

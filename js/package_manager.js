@@ -92,6 +92,18 @@ class PackageManager {
             .map(appName => this.programs.find(p => p.name === appName))
             .filter(Boolean); // Filter out any apps that might have been uninstalled but are still in the pinned list
     }
+
+    uninstallApp(name) {
+        let programs = this.getPrograms();
+        const initialLength = programs.length;
+        programs = programs.filter(p => p.name !== name);
+        if (programs.length === initialLength) {
+            return { success: false, error: 'App not found' };
+        }
+        this._savePrograms(programs);
+        this.unpinApp(name); // Also unpin it if it was pinned
+        return { success: true };
+    }
 }
 
 window.packageManager = new PackageManager(); 

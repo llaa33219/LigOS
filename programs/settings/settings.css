@@ -55,4 +55,91 @@ input[type="color"] {
 
 #reset-os-btn:hover {
     background-color: #c62828;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.setting-category {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1rem;
+}
+
+.setting-category:last-of-type {
+    border-bottom: none;
+}
+
+.setting-category h2 {
+    font-size: 1.2rem;
+    color: #444;
+    margin-bottom: 1rem;
+}
+
+.setting-item {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.setting-item label {
+    flex-basis: 200px;
+    flex-shrink: 0;
+}
+
+.theme-options {
+    display: flex;
+    gap: 15px;
+}
+
+.theme-options label {
+    cursor: pointer;
+}
+
+#app-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.app-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.app-item .icon {
+    width: 32px;
+    height: 32px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin-right: 15px;
+}
+
+.app-item .name {
+    flex-grow: 1;
+    font-weight: 500;
+}
+
+.app-item .actions button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.app-item .actions button:hover {
+    background-color: #e0e0e0;
+}
+
+.danger-zone {
+    margin-top: 2rem;
+    padding: 1rem;
 } 

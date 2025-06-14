@@ -10,9 +10,36 @@
     <div class="settings-container">
         <h1>Settings</h1>
 
-        <div class="setting-item">
-            <label for="bg-color-picker">Desktop Background Color</label>
-            <input type="color" id="bg-color-picker" value="#D9D9D9">
+        <div class="setting-category">
+            <h2>Appearance</h2>
+            <div class="setting-item">
+                <label for="bg-color-picker">Desktop Background Color</label>
+                <input type="color" id="bg-color-picker" value="#2e3440">
+            </div>
+            <div class="setting-item">
+                <label>Theme</label>
+                <div class="theme-options">
+                    <input type="radio" id="light-theme" name="theme" value="light" checked>
+                    <label for="light-theme">Light</label>
+                    <input type="radio" id="dark-theme" name="theme" value="dark">
+                    <label for="dark-theme">Dark</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="setting-category">
+            <h2>About</h2>
+            <div class="setting-item">
+                <span>LigOS Version</span>
+                <span>1.1.0</span>
+            </div>
+        </div>
+
+        <div class="setting-category">
+            <h2>App Management</h2>
+            <div id="app-list">
+                <!-- Installed apps will be listed here -->
+            </div>
         </div>
 
         <div class="setting-item danger-zone">
