@@ -1,0 +1,241 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+:root {
+    --bg-color: #D9D9D9;
+    --sidebar-width: 96px;
+    --sidebar-bg: white;
+    --glow-color: rgba(255, 255, 255, 1);
+    --icon-bg: #D9D9D9;
+    --text-color: black;
+    --border-radius: 48px;
+    --window-border-radius: 48px;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    overflow: hidden;
+}
+
+#desktop {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#sidebar {
+    width: var(--sidebar-width);
+    height: calc(100% - 60px);
+    background-color: var(--sidebar-bg);
+    border-radius: var(--border-radius);
+    margin: 30px;
+    padding: 25px 15px;
+    box-shadow: 0 0 60px var(--glow-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    z-index: 1000;
+}
+
+#sidebar-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+#logo {
+    width: 87px;
+    height: 87px;
+    background-color: var(--icon-bg);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../assets/logo.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8) inset;
+    cursor: pointer;
+}
+
+#datetime {
+    text-align: center;
+    color: var(--text-color);
+}
+
+#time {
+    font-weight: 500;
+}
+
+#date {
+    font-size: 0.8em;
+}
+
+#app-launcher-button {
+    width: 75px;
+    height: 50px;
+    background-color: var(--icon-bg);
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+#pinned-apps {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.pinned-app {
+    width: 87px;
+    height: 87px;
+    background-color: var(--icon-bg);
+    border-radius: 50%;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+}
+
+#main-content {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.window {
+    position: absolute;
+    background: white;
+    border-radius: var(--window-border-radius);
+    box-shadow: 0 0 45px var(--glow-color);
+    display: flex;
+    flex-direction: column;
+    resize: both;
+    overflow: hidden;
+    min-width: 300px;
+    min-height: 200px;
+}
+
+.title-bar {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    cursor: move;
+    background-color: #f1f1f1;
+    border-top-left-radius: var(--window-border-radius);
+    border-top-right-radius: var(--window-border-radius);
+}
+
+.title-bar .title {
+    font-weight: 500;
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.window-controls button {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--icon-bg);
+    cursor: pointer;
+    font-size: 10px;
+    line-height: 18px;
+    text-align: center;
+    padding: 0;
+}
+
+.window-content {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+.window-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0 0 calc(var(--window-border-radius) - 10px) calc(var(--window-border-radius) - 10px);
+}
+
+
+#all-programs {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    width: 80%;
+    height: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 45px var(--glow-color);
+}
+
+#all-programs h2 {
+    margin-top: 0;
+}
+
+#program-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-height: calc(100% - 60px);
+    overflow-y: auto;
+}
+
+.program-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.program-item .pin-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 24px;
+    height: 24px;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.program-item:hover .pin-button {
+    display: block;
+}
+
+.program-item .icon {
+    width: 80px;
+    height: 80px;
+    background-color: var(--icon-bg);
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+}
+
+.hidden {
+    display: none !important;
+} 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LigOS</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <main id="desktop">
+        <aside id="sidebar">
+            <div id="sidebar-top">
+                <div id="logo">
+                    <!-- Logo will be loaded here -->
+                </div>
+                <div id="datetime">
+                    <div id="time">12:00 PM</div>
+                    <div id="date">2024-05-26</div>
+                </div>
+            </div>
+            <div id="pinned-apps">
+                <!-- Pinned applications will go here -->
+            </div>
+        </aside>
+
+        <section id="main-content">
+            <div id="all-programs" class="hidden">
+                <h2>All programs</h2>
+                <div id="program-grid">
+                    <!-- Installed programs will be listed here -->
+                </div>
+            </div>
+            <!-- App windows will be appended here -->
+        </section>
+    </main>
+
+    <div id="window-template" class="hidden">
+        <div class="window">
+            <div class="title-bar">
+                <span class="program-icon"></span>
+                <span class="title">Program Name</span>
+                <div class="window-controls">
+                    <button class="minimize">-</button>
+                    <button class="maximize">[]</button>
+                    <button class="close">X</button>
+                </div>
+            </div>
+            <div class="window-content">
+                <iframe></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/fs.js"></script>
+    <script src="js/package_manager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 
