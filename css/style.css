@@ -2,13 +2,14 @@
 
 :root {
     --bg-color: #D9D9D9;
-    --sidebar-width: 96px;
+    --sidebar-width: 80px;
     --sidebar-bg: white;
     --glow-color: rgba(255, 255, 255, 1);
     --icon-bg: #D9D9D9;
     --text-color: black;
     --border-radius: 48px;
     --window-border-radius: 48px;
+    --animation-speed: 0.3s;
 }
 
 body, html {
@@ -19,6 +20,7 @@ body, html {
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-color);
     overflow: hidden;
+    transition: background-color var(--animation-speed) ease;
 }
 
 #desktop {
@@ -29,10 +31,10 @@ body, html {
 
 #sidebar {
     width: var(--sidebar-width);
-    height: calc(100% - 60px);
+    height: calc(100vh - 60px);
     background-color: var(--sidebar-bg);
     border-radius: var(--border-radius);
-    margin: 30px;
+    margin: auto 30px;
     padding: 25px 15px;
     box-shadow: 0 0 60px var(--glow-color);
     display: flex;
@@ -122,6 +124,17 @@ body, html {
     overflow: hidden;
     min-width: 300px;
     min-height: 200px;
+    transition: width var(--animation-speed) ease, height var(--animation-speed) ease,
+                top var(--animation-speed) ease, left var(--animation-speed) ease,
+                opacity var(--animation-speed) ease, transform var(--animation-speed) ease;
+}
+
+.window.opening {
+    animation: scaleIn var(--animation-speed) forwards;
+}
+
+.window.closing {
+    animation: scaleOut var(--animation-speed) forwards;
 }
 
 .title-bar {
@@ -170,7 +183,6 @@ body, html {
     border-radius: 0 0 calc(var(--window-border-radius) - 10px) calc(var(--window-border-radius) - 10px);
 }
 
-
 #all-programs {
     background-color: white;
     border-radius: var(--border-radius);
@@ -182,6 +194,16 @@ body, html {
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 45px var(--glow-color);
+    opacity: 1;
+    transform-origin: center;
+    transition: opacity var(--animation-speed) ease, transform var(--animation-speed) ease;
+    z-index: 2000;
+}
+
+#all-programs.hidden {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+    pointer-events: none;
 }
 
 #all-programs h2 {
@@ -237,5 +259,29 @@ body, html {
 }
 
 .hidden {
-    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: scale(0.95);
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes scaleOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.9);
+    }
 } 

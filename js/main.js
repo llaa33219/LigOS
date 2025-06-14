@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let activeWindow = null;
     let highestZIndex = 100;
+    const openWindows = {}; // To track open windows
 
     // --- Clock ---
     function updateClock() {
@@ -22,13 +23,34 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
 
     // --- App Launcher ---
-    logoBtn.addEventListener('click', () => {
+    logoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         allProgramsGrid.classList.toggle('hidden');
     });
 
+    // Close 'All Programs' when clicking outside
+    document.addEventListener('click', () => {
+        if (!allProgramsGrid.classList.contains('hidden')) {
+            allProgramsGrid.classList.add('hidden');
+        }
+    });
+    allProgramsGrid.addEventListener('click', e => e.stopPropagation());
+
     // --- Window Management ---
     function createWindow(app) {
+        // If window is already open but minimized, just show it.
+        if (openWindows[app.name]) {
+            const existingWindow = openWindows[app.name];
+            existingWindow.classList.remove('hidden');
+            highestZIndex++;
+            existingWindow.style.zIndex = highestZIndex;
+            activeWindow = existingWindow;
+            return;
+        }
+
         const newWindow = windowTemplate.firstElementChild.cloneNode(true);
+        newWindow.classList.add('opening');
+        newWindow.addEventListener('animationend', () => newWindow.classList.remove('opening'), { once: true });
         newWindow.querySelector('.title').textContent = app.name;
         
         if (app.icon) {
@@ -47,34 +69,43 @@ document.addEventListener('DOMContentLoaded', () => {
         iframe.src = app.url;
 
         // Position new windows in a cascade
-        const openWindows = mainContent.querySelectorAll('.window').length;
-        newWindow.style.top = `${30 + (openWindows * 20)}px`;
-        newWindow.style.left = `${150 + (openWindows * 20)}px`;
+        const openWindowCount = mainContent.querySelectorAll('.window').length;
+        newWindow.style.top = `${30 + (openWindowCount * 20)}px`;
+        newWindow.style.left = `${150 + (openWindowCount * 20)}px`;
 
 
         mainContent.appendChild(newWindow);
         makeDraggable(newWindow);
         
         // --- Window Controls ---
-        newWindow.querySelector('.close').addEventListener('click', () => newWindow.remove());
-        newWindow.querySelector('.minimize').addEventListener('click', () => newWindow.classList.add('hidden')); // simple hide
+        newWindow.querySelector('.close').addEventListener('click', () => {
+            newWindow.classList.add('closing');
+            newWindow.addEventListener('animationend', () => {
+                newWindow.remove();
+                delete openWindows[app.name];
+            }, { once: true });
+        });
+        newWindow.querySelector('.minimize').addEventListener('click', () => newWindow.classList.add('hidden')); 
+
         newWindow.querySelector('.maximize').addEventListener('click', () => {
-            if (newWindow.dataset.isMaximized === 'true') {
-                newWindow.style.top = newWindow.dataset.oldTop;
-                newWindow.style.left = newWindow.dataset.oldLeft;
-                newWindow.style.width = newWindow.dataset.oldWidth;
-                newWindow.style.height = newWindow.dataset.oldHeight;
-                newWindow.dataset.isMaximized = 'false';
-            } else {
+            newWindow.classList.toggle('maximized');
+            if (newWindow.classList.contains('maximized')) {
+                // Save original position and size
                 newWindow.dataset.oldTop = newWindow.style.top;
                 newWindow.dataset.oldLeft = newWindow.style.left;
                 newWindow.dataset.oldWidth = newWindow.style.width;
                 newWindow.dataset.oldHeight = newWindow.style.height;
-                newWindow.style.top = '0';
-                newWindow.style.left = '0';
-                newWindow.style.width = 'calc(100% - var(--sidebar-width) - 40px)';
-                newWindow.style.height = '100%';
-                newWindow.dataset.isMaximized = 'true';
+                // Maximize with 10px margin
+                newWindow.style.top = '10px';
+                newWindow.style.left = '10px';
+                newWindow.style.width = 'calc(100% - 20px)';
+                newWindow.style.height = 'calc(100% - 20px)';
+            } else {
+                // Restore
+                newWindow.style.top = newWindow.dataset.oldTop;
+                newWindow.style.left = newWindow.dataset.oldLeft;
+                newWindow.style.width = newWindow.dataset.oldWidth;
+                newWindow.style.height = newWindow.dataset.oldHeight;
             }
         });
 
@@ -87,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         newWindow.style.zIndex = ++highestZIndex;
         activeWindow = newWindow;
+        openWindows[app.name] = newWindow; // Track the new window
 
         // Hide "All Programs" view when an app is opened
         allProgramsGrid.classList.add('hidden');
